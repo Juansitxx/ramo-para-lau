@@ -31,6 +31,14 @@ body {
   font-style: normal;
   text-shadow: 0 0 34px #7b4bd275;
 }
+.apodos {
+  max-width: 760px;
+  margin: 12px auto 0;
+  color: #d2c3e8;
+  font-size: clamp(14px, 1.5vw, 17px);
+  line-height: 1.65;
+  text-wrap: balance;
+}
 .cursor { color: #7c69a4; animation: blink 1.2s steps(1) infinite; }
 .stage {
   position: relative;
