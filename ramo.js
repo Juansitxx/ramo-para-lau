@@ -4,11 +4,11 @@ const overlay = document.querySelector('#overlay');
 const controls = document.querySelector('#controls');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const palette = {
-  stem: '#78b994', leaf: '#a5d7a2', paper: '#c48b9d', ribbon: '#ffd1e2',
-  pink: '#ffa7cc', rose: '#fa759e', lilac: '#cdb5ff', peach: '#ffbd9b',
-  gold: '#ffe4a2', star: '#b99ebd', text: '#fff0f5'
+  stem: '#655a91', leaf: '#8e7abc', paper: '#594c78', ribbon: '#b7a3ed',
+  violet: '#9270da', orchid: '#b895ee', lavender: '#d6c2ff', plum: '#7355ad',
+  core: '#eee4ff', star: '#65587c'
 };
-const flowerColors = ['rose', 'pink', 'lilac', 'peach', 'pink', 'lilac', 'rose', 'peach', 'pink'];
+const flowerColors = ['violet', 'orchid', 'lavender', 'plum', 'orchid', 'lavender', 'violet', 'plum', 'orchid'];
 const positions = [
   [.15,.30],[.32,.23],[.50,.18],[.68,.23],[.85,.30],
   [.24,.42],[.42,.38],[.59,.39],[.76,.43]
@@ -79,7 +79,7 @@ function flower(x, y, color, growth, mobile) {
       const distance = Math.hypot((c-(w-1)/2)/(w/2), (r-(h-1)/2)/(h/2));
       if (distance <= growth * 1.2 && glyph !== ' ')
         put(x + c - Math.floor(w/2), y + r - Math.floor(h/2), glyph,
-          glyph === 'o' ? 'gold' : glyph === '*' && (r === 0 || r === h-1) ? 'gold' : color);
+          glyph === 'o' ? 'core' : glyph === '*' && (r === 0 || r === h-1) ? 'core' : color);
     }
   }
 }
@@ -116,8 +116,6 @@ function bouquet(elapsed, now) {
     word(cx-6, bottom-8, ' .-.__.-. ', 'ribbon');
     word(cx-6, bottom-7, '(   LAU   )', 'ribbon');
     word(cx-6, bottom-6, " `-.__.-' ", 'ribbon');
-    const message = mobile ? 'PARA MI GORDITA <3' : 'PARA MI GORDITA LAU <3';
-    word(cx-Math.floor(message.length/2), rows-3, message, 'text');
   }
 }
 function addPetals(amount, origin) {
@@ -134,7 +132,7 @@ function draw(now) {
   const box = canvas.getBoundingClientRect();
   ctx.clearRect(0,0,box.width,box.height);
   const glow = ctx.createRadialGradient(box.width*.5,box.height*.55,10,box.width*.5,box.height*.55,box.width*.63);
-  glow.addColorStop(0,'#35243d'); glow.addColorStop(1,'#170f20');
+  glow.addColorStop(0,'#211633'); glow.addColorStop(1,'#090711');
   ctx.fillStyle=glow; ctx.fillRect(0,0,box.width,box.height);
   clearGrid();
   const elapsed = started ? (now-startedAt)/1000 : 0;
