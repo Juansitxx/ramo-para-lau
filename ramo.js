@@ -131,9 +131,7 @@ function draw(now) {
   const dt = Math.min(50, now-last || 16); last = now;
   const box = canvas.getBoundingClientRect();
   ctx.clearRect(0,0,box.width,box.height);
-  const glow = ctx.createRadialGradient(box.width*.5,box.height*.55,10,box.width*.5,box.height*.55,box.width*.63);
-  glow.addColorStop(0,'#211633'); glow.addColorStop(1,'#090711');
-  ctx.fillStyle=glow; ctx.fillRect(0,0,box.width,box.height);
+  ctx.fillStyle='#000'; ctx.fillRect(0,0,box.width,box.height);
   clearGrid();
   const elapsed = started ? (now-startedAt)/1000 : 0;
   for (let i=0;i<23;i++) {

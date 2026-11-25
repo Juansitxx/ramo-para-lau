@@ -1,14 +1,14 @@
 :root {
   color-scheme: dark;
   font-family: Consolas, "Courier New", monospace;
-  background: #090711;
+  background: #000;
   color: #eee9fb;
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
   min-height: 100dvh;
-  background: radial-gradient(circle at 74% 22%, #201637 0, transparent 38%), #090711;
+  background: #000;
 }
 .page {
   width: min(1200px, 100%);
@@ -36,9 +36,9 @@ body {
   position: relative;
   overflow: hidden;
   border: 1px solid #4c3b70;
-  background: #0d0a17;
+  background: #000;
   clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
-  box-shadow: 0 30px 80px #05030a;
+  box-shadow: 0 30px 80px #000;
 }
 .stage::before {
   content: "";
@@ -47,7 +47,7 @@ body {
   z-index: 2;
   pointer-events: none;
   opacity: .03;
-  background: repeating-linear-gradient(to bottom, transparent 0 3px, #cbb6ff 4px 5px);
+  background: repeating-linear-gradient(to bottom, transparent 0 3px, #fff 4px 5px);
 }
 canvas {
   display: block;
@@ -63,14 +63,14 @@ canvas {
   z-index: 3;
   display: grid;
   place-items: center;
-  background: #0b0817e8;
+  background: #000000ed;
   transition: opacity .55s, visibility .55s;
 }
 .overlay.opened { opacity: 0; visibility: hidden; pointer-events: none; }
 button {
   border: 1px solid #66508e;
   border-radius: 4px;
-  background: #171126;
+  background: #090909;
   color: #d9c7f8;
   padding: 13px 20px;
   font: 600 14px Consolas, "Courier New", monospace;
