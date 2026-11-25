@@ -5,29 +5,34 @@ const controls = document.querySelector('#controls');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const palette = {
   stem: '#655a91', leaf: '#8e7abc', paper: '#594c78', ribbon: '#b7a3ed',
-  violet: '#9270da', orchid: '#b895ee', lavender: '#d6c2ff', plum: '#7355ad',
-  core: '#eee4ff', star: '#65587c'
+  fuchsia: '#ff5ead', coral: '#ff8b8b', amber: '#ffd166', violet: '#a782ff',
+  aqua: '#65dfd4', orchid: '#d59aff', peach: '#ffad78', blue: '#80b3ff',
+  rose: '#ff78c2', core: '#fff4d9', star: '#65587c'
 };
-const flowerColors = ['violet', 'orchid', 'lavender', 'plum', 'orchid', 'lavender', 'violet', 'plum', 'orchid'];
+const flowerColors = ['fuchsia', 'amber', 'aqua', 'violet', 'coral', 'orchid', 'peach', 'blue', 'rose'];
 const positions = [
   [.15,.30],[.32,.23],[.50,.18],[.68,.23],[.85,.30],
   [.24,.42],[.42,.38],[.59,.39],[.76,.43]
 ];
 const bigFlower = [
-  '   .-***-.   ',
-  '  (* @ @ *)  ',
-  ' (* @***@ *) ',
-  '(*@@*o*@@*)',
-  ' (* @***@ *) ',
-  '  (* @ @ *)  ',
-  "   `-***-'   "
+  '    .-***-.    ',
+  '  .*@@@@@@@*.  ',
+  ' .*@@@***@@@*. ',
+  '(*@@**@@@**@@*)',
+  '(*@**@@o@@**@*)',
+  '(*@@**@@@**@@*)',
+  ' .*@@@***@@@*. ',
+  '  .*@@@@@@@*.  ',
+  "    `-***-'    "
 ];
 const smallFlower = [
-  '  .-*-.  ',
-  ' (* @ *) ',
-  '(*@ o @*)',
-  ' (* @ *) ',
-  "  `-*-'  "
+  '  .-**-. ',
+  ' (*@@@*) ',
+  '(*@@*@@*)',
+  '(*@o@*@*)',
+  '(*@@*@@*)',
+  ' (*@@@*) ',
+  "  `-**-' "
 ];
 let columns = 100, rows = 54, cellW = 10, cellH = 12;
 let cells = [], started = false, startedAt = 0, last = 0;
@@ -40,7 +45,7 @@ function resize() {
   canvas.height = Math.round(box.height * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   columns = box.width < 650 ? 52 : 100;
-  rows = box.width < 650 ? 58 : 54;
+  rows = 54;
   cellW = box.width / columns;
   cellH = box.height / rows;
   ctx.textAlign = 'center';
@@ -68,7 +73,7 @@ function line(x1, y1, x2, y2, color, progress = 1) {
   }
 }
 function smooth(t) { return Math.max(0, Math.min(1, t)); }
-function flower(x, y, color, growth, mobile) {
+function flower(x, y, color, accent, growth, mobile) {
   const art = mobile ? smallFlower : bigFlower;
   const w = Math.max(...art.map(s => s.length));
   const h = art.length;
@@ -79,7 +84,7 @@ function flower(x, y, color, growth, mobile) {
       const distance = Math.hypot((c-(w-1)/2)/(w/2), (r-(h-1)/2)/(h/2));
       if (distance <= growth * 1.2 && glyph !== ' ')
         put(x + c - Math.floor(w/2), y + r - Math.floor(h/2), glyph,
-          glyph === 'o' ? 'core' : glyph === '*' && (r === 0 || r === h-1) ? 'core' : color);
+          glyph === 'o' ? 'core' : glyph === '*' ? accent : color);
     }
   }
 }
@@ -110,7 +115,8 @@ function bouquet(elapsed, now) {
   positions.forEach(([px, py], i) => {
     const growth = smooth((elapsed - .7 - i*.22)/.7);
     const sway = reducedMotion.matches ? 0 : Math.sin(now*.0014 + i*1.7)*.65*growth;
-    flower(Math.round(px*columns+sway), Math.round(py*rows), flowerColors[i], growth, mobile);
+    flower(Math.round(px*columns+sway), Math.round(py*rows), flowerColors[i],
+      flowerColors[(i+3)%flowerColors.length], growth, mobile);
   });
   if (elapsed > 2.8) {
     word(cx-6, bottom-8, ' .-.__.-. ', 'ribbon');
@@ -124,7 +130,7 @@ function addPetals(amount, origin) {
     y: origin?.y ?? -Math.random()*rows*.3,
     vx: (Math.random()-.5)*.08, vy: .025+Math.random()*.04,
     phase: Math.random()*6.3, color: flowerColors[i%flowerColors.length],
-    glyph: i%3 ? '.' : '*', life: 0
+    glyph: i%3 ? '@' : '*', size: i%2 ? 1 : 2, life: 0
   });
 }
 function draw(now) {
@@ -145,6 +151,7 @@ function draw(now) {
     p.life++; p.y+=p.vy*dt; p.x+=(p.vx+Math.sin(p.phase+p.life*.04)*.025)*dt;
     if (pointer) { const dx=p.x-pointer.x,dy=p.y-pointer.y,dist=Math.hypot(dx,dy); if(dist<8 && dist>0) p.x+=dx/dist*.12; }
     put(p.x,p.y,p.glyph,p.color);
+    if(p.size===2){put(p.x+1,p.y,'*',p.color);put(p.x,p.y+1,'*',p.color)}
   });
   bursts=bursts.filter(b=>b.life<35);
   bursts.forEach(b=>{b.life++;put(b.x+b.vx*b.life*.22,b.y+b.vy*b.life*.22,b.glyph,b.color)});
