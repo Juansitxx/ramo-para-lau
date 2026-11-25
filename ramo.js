@@ -4,15 +4,19 @@ const overlay = document.querySelector('#overlay');
 const controls = document.querySelector('#controls');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const palette = {
-  stem: '#655a91', leaf: '#8e7abc', paper: '#594c78', ribbon: '#b7a3ed',
-  fuchsia: '#ff5ead', coral: '#ff8b8b', amber: '#ffd166', violet: '#a782ff',
-  aqua: '#65dfd4', orchid: '#d59aff', peach: '#ffad78', blue: '#80b3ff',
+  stem: '#94d9a6', leaf: '#c5f0b7', paper: '#c9afea', ribbon: '#f2c5ff',
+  fuchsia: '#ff5ead', coral: '#ff837f', amber: '#ffd35f', violet: '#b491ff',
+  aqua: '#68eee0', orchid: '#e1a4ff', peach: '#ffad78', blue: '#8dc8ff',
   rose: '#ff78c2', core: '#fff4d9', star: '#65587c'
 };
-const flowerColors = ['fuchsia', 'amber', 'aqua', 'violet', 'coral', 'orchid', 'peach', 'blue', 'rose'];
+const flowerColors = ['fuchsia', 'amber', 'aqua', 'violet', 'coral', 'orchid', 'blue', 'rose', 'peach'];
 const positions = [
   [.15,.30],[.32,.23],[.50,.18],[.68,.23],[.85,.30],
   [.24,.42],[.42,.38],[.59,.39],[.76,.43]
+];
+const mobilePositions = [
+  [.18,.27],[.50,.16],[.82,.27],[.32,.42],
+  [.68,.42],[.18,.58],[.50,.58],[.82,.58]
 ];
 const bigFlower = [
   '    .-***-.    ',
@@ -26,13 +30,13 @@ const bigFlower = [
   "    `-***-'    "
 ];
 const smallFlower = [
-  '  .-**-. ',
-  ' (*@@@*) ',
-  '(*@@*@@*)',
-  '(*@o@*@*)',
-  '(*@@*@@*)',
-  ' (*@@@*) ',
-  "  `-**-' "
+  '  .-***-.  ',
+  ' (*@@@@@*) ',
+  '(*@@***@@*)',
+  '(*@@*o*@@*)',
+  '(*@@***@@*)',
+  ' (*@@@@@*) ',
+  "  `-***-'  "
 ];
 let columns = 100, rows = 54, cellW = 10, cellH = 12;
 let cells = [], started = false, startedAt = 0, last = 0;
@@ -44,13 +48,13 @@ function resize() {
   canvas.width = Math.round(box.width * dpr);
   canvas.height = Math.round(box.height * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  columns = box.width < 650 ? 52 : 100;
-  rows = 54;
+  columns = box.width < 650 ? 44 : 100;
+  rows = box.width < 650 ? 48 : 54;
   cellW = box.width / columns;
   cellH = box.height / rows;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = `${Math.floor(Math.min(cellH * .98, cellW * 1.45))}px Consolas, "Courier New", monospace`;
+  ctx.font = `bold ${Math.floor(Math.min(cellH * .98, cellW * 1.45))}px Consolas, "Courier New", monospace`;
 }
 
 function clearGrid() {
@@ -90,18 +94,19 @@ function flower(x, y, color, accent, growth, mobile) {
 }
 function bouquet(elapsed, now) {
   const mobile = columns < 70;
+  const blooms = mobile ? mobilePositions : positions;
   const cx = Math.floor(columns/2);
   const bottom = Math.floor(rows*.87);
   const open = smooth(elapsed/1.2);
   const spread = mobile ? columns*.41 : columns*.43;
-  const paperY = Math.floor(rows*.53);
+  const paperY = Math.floor(rows*(mobile ? .65 : .53));
   line(cx-spread*open, paperY, cx-4, bottom, 'paper', open);
   line(cx+spread*open, paperY, cx+4, bottom, 'paper', open);
   line(cx-spread*.66*open, paperY+5, cx-3, bottom+1, 'paper', open);
   line(cx+spread*.66*open, paperY+5, cx+3, bottom+1, 'paper', open);
   word(cx-5,bottom+1,'\\________/','paper');
 
-  positions.forEach(([px, py], i) => {
+  blooms.forEach(([px, py], i) => {
     const growth = smooth((elapsed - .25 - i*.22)/.85);
     if (!growth) return;
     const sway = reducedMotion.matches ? 0 : Math.sin(now*.0014 + i*1.7)*.65*growth;
@@ -112,13 +117,15 @@ function bouquet(elapsed, now) {
     const leafX = Math.round(x + (center-x)*.52);
     if (growth > .45) word(leafX + (i%2 ? -3 : 1), leafY, i%2 ? '<//':'\\\\>', 'leaf');
   });
-  positions.forEach(([px, py], i) => {
+  blooms.forEach(([px, py], i) => {
     const growth = smooth((elapsed - .7 - i*.22)/.7);
     const sway = reducedMotion.matches ? 0 : Math.sin(now*.0014 + i*1.7)*.65*growth;
     flower(Math.round(px*columns+sway), Math.round(py*rows), flowerColors[i],
       flowerColors[(i+3)%flowerColors.length], growth, mobile);
   });
   if (elapsed > 2.8) {
+    for (let row=bottom-8; row<=bottom-6; row++)
+      for (let col=cx-6; col<=cx+6; col++) cells[row][col]=null;
     word(cx-6, bottom-8, ' .-.__.-. ', 'ribbon');
     word(cx-6, bottom-7, '(   LAU   )', 'ribbon');
     word(cx-6, bottom-6, " `-.__.-' ", 'ribbon');
@@ -159,7 +166,7 @@ function draw(now) {
     const cell=cells[y][x]; if(!cell) continue;
     ctx.fillStyle=palette[cell[1]];
     ctx.shadowColor=cell[1]==='star' ? 'transparent' : palette[cell[1]];
-    ctx.shadowBlur=cell[1]==='star' ? 0 : 6;
+    ctx.shadowBlur=cell[1]==='star' ? 0 : 9;
     ctx.fillText(cell[0],(x+.5)*cellW,(y+.5)*cellH);
   }
   ctx.shadowBlur=0;
