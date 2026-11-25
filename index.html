@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120d1c">
+  <meta name="description" content="Un ramo de flores ASCII que florece para Lau.">
+  <title>Un ramo para Lau</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="heading">
+      <span class="eyebrow">UNA SORPRESA PARA TI</span>
+      <h1>Un ramo para <em>Lau</em><span class="cursor" aria-hidden="true">_</span></h1>
+      <p>Lo hice florecer letra por letra, mi gordita.</p>
+    </header>
+
+    <section class="stage" aria-label="Ramo de flores ASCII interactivo">
+      <div class="stage-top" aria-hidden="true"><span>♥  FLORERÍA DE CARACTERES</span><span>PARA: LAU</span></div>
+      <canvas id="bouquet" aria-label="Ramo ASCII animado con flores rosas, lilas y doradas" role="img"></canvas>
+      <div class="overlay" id="overlay">
+        <div class="seal" aria-hidden="true">&lt;3</div>
+        <p>Hay algo para ti...</p>
+        <button class="primary" id="open" type="button">Abrir mi ramo</button>
+      </div>
+      <div class="stage-bottom" aria-hidden="true"><span>HECHO CON ♥ Y MUCHAS TECLAS</span><span>01 / ∞</span></div>
+    </section>
+
+    <div class="controls" id="controls" hidden>
+      <p>Mueve el cursor entre los pétalos y toca el ramo ✦</p>
+      <div class="actions">
+        <button id="petals" type="button">Lluvia de pétalos</button>
+        <button id="again" type="button">Verlo florecer otra vez</button>
+      </div>
+    </div>
+    <p class="closing">Para ti, Lau. <span>Siempre. ♥</span></p>
+  </main>
+  <script src="ramo.js"></script>
+</body>
+</html>
